@@ -6,8 +6,8 @@
 using namespace std;
 
 bool order(string a,string b);
-int kinda_Bsearch(string* v,int l,string p);
-
+int kinda_Bsearch(string* v,int l,string p,int start);
+int search_string(string* v,int l,string p);
 
 int main()
 {
@@ -16,7 +16,7 @@ int main()
 	int n = 14;
 	string v[] = {"at","","","","ball","","","car","","","dad","","","horn"};
 
-	int x = kinda_Bsearch(v,n,"dad");
+	int x = search_string(v,n,"car");
 	printf("%d",x);
 
 
@@ -45,19 +45,19 @@ bool order(string a,string b){
 	return false;
 }
 
-int kinda_Bsearch(string* v,int l,string p){
+int kinda_Bsearch(string* v,int l,string p,int start){
 
 	int low = 0;
 	int high = l-1;
 
 	int mid;
-	int dir = 1;
+	int dir = start;
 	while(low <= high){
 
 		mid = (low+high)/2;
 
 		//If mid is an empty string,search the closest non-empty string ****
-
+		//printf("%d\n",mid);
 		if(v[mid] == ""){
 			int k;
 			int temp_mid;
@@ -67,10 +67,15 @@ int kinda_Bsearch(string* v,int l,string p){
 				while(v[temp_mid] == ""){
 					k++;
 					temp_mid = (k+high)/2;
+					if(v[temp_mid] == p){
+						return temp_mid;
+					}
 					if(temp_mid >= l){
 						break;
 					}
 				}
+				low = k;
+				mid = temp_mid;
 			}
 			if(dir == 0){
 				k = high;
@@ -78,10 +83,15 @@ int kinda_Bsearch(string* v,int l,string p){
 				while(v[temp_mid] == ""){
 					k--;
 					temp_mid = (low+k)/2;
+					if(v[temp_mid] == p){
+						return temp_mid;
+					}
 					if(temp_mid <= 0){
 						break;
 					}
 				}
+				high = k;
+				mid = temp_mid;
 			}
 
 		}
@@ -104,6 +114,13 @@ int kinda_Bsearch(string* v,int l,string p){
 
 	}
 	return -1;
-
 }
 
+int search_string(string* v,int l,string p){
+
+	int x = kinda_Bsearch(v,l,p,1);
+	if(x == -1){
+		return kinda_Bsearch(v,l,p,0);
+	}
+	return x;
+}
